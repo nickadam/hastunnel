@@ -57,7 +57,7 @@ def get_backends(config):
         service = services[service_name]
         backends.append(get_next_backend(service['backends']))
     backends.sort()
-    return backends
+    return json.dumps(backends)
 
 
 def run_foreground(cmd):
@@ -81,14 +81,15 @@ def run_stunnel():
 
 backends = get_backends(config)
 print(datetime.now(tz=timezone.utc).isoformat()
-      + ' using backends ' + json.dumps(backends), flush=True)
+      + ' using backends ' + backends, flush=True)
 write_stunnel_conf(config)
 run_stunnel()
 while True:
-    if json.dumps(backends) != json.dumps(get_backends(config)):
-        backends = get_backends(config)
+    new_backends = get_backends(config)
+    if backends != new_backends:
         print(datetime.now(tz=timezone.utc).isoformat()
-              + ' using backends ' + json.dumps(backends), flush=True)
+              + ' switching ' + backends + ' to ' + new_backends, flush=True)
+        backends = new_backends
         write_stunnel_conf(config)
         run_stunnel()
     time.sleep(2)
