@@ -31,6 +31,8 @@ def check_tcp(host, port, retry=0):
         if retry < 2:
             retry = retry + 1
             return check_tcp(host, port, retry)
+        print(datetime.now(tz=timezone.utc).isoformat()
+              + ' failed to connect to ' + host + ':' + str(port), flush=True)
         return False
 
 
