@@ -19,7 +19,7 @@ def get_next_backend(backends=[]):
     return backends[0]
 
 
-def check_tcp(host, port):
+def check_tcp(host, port, retry=0):
     port = int(port)
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.settimeout(1)
@@ -28,6 +28,9 @@ def check_tcp(host, port):
         s.close()
         return True
     except:
+        if retry < 2:
+            retry = retry + 1
+            return check_tcp(host, port, retry)
         return False
 
 
