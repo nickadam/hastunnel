@@ -75,13 +75,13 @@ def run_background(cmd):
 
 
 def run_stunnel():
-    cmd = ['pgrep', 'stunnel']
-    o = run_foreground(cmd)
-    for pid in o.stdout.strip().split("\n"):
-        cmd = ['kill', pid]
-        run_foreground(cmd)
     cmd = ['stunnel', '/stunnel.conf']
     run_background(cmd)
+
+
+def reload_stunnel():
+    cmd = ['killall', '-HUP', 'stunnel']
+    run_foreground(cmd)
 
 
 backends = get_backends(config)
@@ -96,5 +96,5 @@ while True:
               + ' switching ' + backends + ' to ' + new_backends, flush=True)
         backends = new_backends
         write_stunnel_conf(config)
-        run_stunnel()
+        reload_stunnel()
     time.sleep(2)
