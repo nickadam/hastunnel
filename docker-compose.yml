@@ -1,7 +1,7 @@
 version: '3.7'
 services:
   hastunnel:
-    image: nickadam/hastunnel:1.2
+    image: nickadam/hastunnel:v1.3.0
     build:
       context: .
       dockerfile: Dockerfile

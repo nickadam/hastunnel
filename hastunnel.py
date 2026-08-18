@@ -76,7 +76,7 @@ def run_background(cmd):
 
 def run_stunnel():
     cmd = ['stunnel', '/stunnel.conf']
-    run_background(cmd)
+    return run_background(cmd)
 
 
 def reload_stunnel():
@@ -88,8 +88,13 @@ backends = get_backends(config)
 print(datetime.now(tz=timezone.utc).isoformat()
       + ' using backends ' + backends, flush=True)
 write_stunnel_conf(config)
-run_stunnel()
+stunnel_process = run_stunnel()
 while True:
+    if stunnel_process.poll() is not None:
+        print(datetime.now(tz=timezone.utc).isoformat()
+              + ' stunnel exited unexpectedly, restarting', flush=True)
+        stunnel_process = run_stunnel()
+
     new_backends = get_backends(config)
     if backends != new_backends:
         print(datetime.now(tz=timezone.utc).isoformat()

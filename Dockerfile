@@ -1,10 +1,6 @@
 FROM alpine:latest
 
-RUN apk add python3 py-pip stunnel tini
-
-COPY --chmod=644 requirements.txt .
-
-RUN pip3 install -r requirements.txt
+RUN apk add python3 py-pip py3-yaml stunnel tini
 
 COPY --chmod=644 hastunnel.py .
 
